@@ -1,0 +1,7 @@
+.env
+__pycache__
+*/__pycache__
+plots
+.vscode
+.env_copy
+test*.py
