@@ -1,7 +1,7 @@
 # HealthJournal
 
 HealthJournal is a open-source, easy-to-use, voice-activated journal designed to track and manage your health records. It's easily accessible, portable, and highly customizable.
-![](https://github.com/Hlibisev/health_test/blob/main/resources/readme.gif)
+![](https://github.com/Hlibisev/healthJournal/blob/main/resources/readme.gif)
 
 ## Key Features
 
@@ -10,7 +10,7 @@ HealthJournal uses Notion for data rendering and editing. This means that Health
 
 Here's how the [Notion template](https://phantom-latency-e69.notion.site/Health-Journal-de4c3203cdbb449ea675089c1dfeaa0b) looks.
 
-![](https://github.com/Hlibisev/health_test/blob/main/resources/view.png)
+![](https://github.com/Hlibisev/healthJournal/blob/main/resources/view.png)
 
 ### Backable
 Ensure the safety of your health data with weekly backups to AWS, stored in an accessible, human-readable format. HealthJournal guarantees that your information remains independent and easily retrievable, safeguarding health history.
