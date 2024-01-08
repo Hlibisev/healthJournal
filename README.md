@@ -38,6 +38,7 @@ HealthJournal is designed for easy integration of new features, seamlessly blend
 2. **Siri Shortcut**: Set up a Siri shortcut pointing to `your_ip/process`. Download it [here](https://www.icloud.com/shortcuts/1e7277cb9bc3439da68453858ae476cb). Set endpoint up and rename it to "Добавь запись".
 3. **Environment Configuration**: Populate your `.env` file with the obtained API keys.
     - For a Notion page link like `https://www.notion.so/aeff6b4307b6466e97c8ef023ea79b1f?v=908cd591b39f4dc3bf331739a1bd1532`, the key is `aeff6b4307b6466e97c8ef023ea79b1f`.
+    - This page must be [added](https://developers.notion.com/docs/create-a-notion-integration#give-your-integration-page-permissions) to integration.
 4. **Docker**: Launch the Docker file to start the application.
     - Ensure Docker is installed on your system. If not installed, follow the instructions at [Docker Installation Guide](https://docs.docker.com/engine/install/ubuntu/).
     - Navigate to the directory where your healthJournal is located.
