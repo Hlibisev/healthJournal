@@ -17,4 +17,4 @@ NOTION_PAGES_IDS = {
 }
 
 # Processors autimatically registered using health_journal.processors.base.register_processor
-PROCESSORS: "List[processor]" = []  # noqa: F821
+PROCESSORS: "List[Processor]" = []  # noqa: F821
