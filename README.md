@@ -28,7 +28,7 @@ HealthJournal is designed for easy integration of new features, seamlessly blend
 
 ### Prerequisites
 
-- A server with a public IP address.
+- A server with a public IP address. [Reconv](https://www.reconv.pl/en), for example.
 - An OpenAI API key. Register at [OpenAI](https://platform.openai.com/api-keys) to obtain your key.
 - A Notion integration with API key. Set this up at [Notion Developers](https://developers.notion.com/docs/create-a-notion-integration).
 
@@ -39,7 +39,6 @@ HealthJournal is designed for easy integration of new features, seamlessly blend
 3. **Environment Configuration**: Populate your `.env` file with the obtained API keys.
     - For a Notion page link like `https://www.notion.so/aeff6b4307b6466e97c8ef023ea79b1f?v=908cd591b39f4dc3bf331739a1bd1532`, the key is `aeff6b4307b6466e97c8ef023ea79b1f`.
 4. **Docker**: Launch the Docker file to start the application.
-    Установите докер, если у вас он не установлен https://docs.docker.com/engine/install/ubuntu/
     - Ensure Docker is installed on your system. If not installed, follow the instructions at [Docker Installation Guide](https://docs.docker.com/engine/install/ubuntu/).
     - Navigate to the directory where your healthJournal is located.
     - Build the Docker image using the following command:
