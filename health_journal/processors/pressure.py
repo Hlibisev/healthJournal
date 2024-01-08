@@ -37,10 +37,9 @@ class BloodPressureProcessor(NotionTableProcessor, Drawble):
         new_entry = {
             "parent": {"database_id": self.NOTION_DATABASE_ID},
             "properties": {
-                "Name": {"title": [{"text": {"content": ""}}]},
                 "Date": {"date": {"start": current_date}},
                 "Upper": {"number": int(upper)},
-                "Full text": {"rich_text": [{"text": {"content": text}}]},
+                "Full text": {"title": [{"text": {"content": text}}]},
             },
         }
         if lower:

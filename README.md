@@ -39,6 +39,20 @@ HealthJournal is designed for easy integration of new features, seamlessly blend
 3. **Environment Configuration**: Populate your `.env` file with the obtained API keys.
     - For a Notion page link like `https://www.notion.so/aeff6b4307b6466e97c8ef023ea79b1f?v=908cd591b39f4dc3bf331739a1bd1532`, the key is `aeff6b4307b6466e97c8ef023ea79b1f`.
 4. **Docker**: Launch the Docker file to start the application.
+    Установите докер, если у вас он не установлен https://docs.docker.com/engine/install/ubuntu/
+    - Ensure Docker is installed on your system. If not installed, follow the instructions at [Docker Installation Guide](https://docs.docker.com/engine/install/ubuntu/).
+    - Navigate to the directory where your healthJournal is located.
+    - Build the Docker image using the following command:
+     ```bash
+     docker build . -t health_journal
+     ```
+
+    - Once the build is complete, run the container with the following command:
+    ```bash
+    docker run -p 3332:3332 health_journal
+    ```
+
+   - This command maps port 3332 of the container to port 3332 on the host machine, allowing you to access the HealthJournal application.
 
 ## Adding Functionality
 
