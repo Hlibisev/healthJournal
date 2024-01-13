@@ -1,11 +1,13 @@
 import json
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 import notion_client
 import pandas as pd
 
 from health_journal.constants import NOTION_DATABASE_IDS, NOTION_PAGES_IDS, PROCESSORS
 from health_journal.settings_secret import AUTH_KEY
+from health_journal.utils import save_page
 
 
 class Processor(ABC):
@@ -118,13 +120,10 @@ class NotionPageProcessor(NotionProcessor, BackUpable):
         pass
 
     def create_backup(self):
-        blocks = self.notion.blocks.children.list(block_id=self.NOTION_PAGE_ID)["results"]
+        folder = Path("backup") / f"{self.name}"
+        save_page(self.notion, self.NOTION_PAGE_ID, folder)
 
-        with open(f"{self.name}.json", "w") as json_file:
-            json.dump(blocks, json_file, indent=4)
-
-        return f"{self.name}.json"
-
+        return folder
 
 class Drawble(ABC):
     """
