@@ -2,10 +2,9 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 import pytz
+from health_journal.notion.data import NoitonTable
 
 from health_journal.processors.base import NotionPageProcessor, register_processor
-from health_journal.processors import EmotionsDiaryProcessor
-from health_journal.utils import change_text_notion
 from health_journal.text_analysis.chatgpt import request_gpt
 from health_journal.text_analysis.prompts import SUMMARIZATION_HEALTH_PROMPT
 
@@ -28,11 +27,11 @@ class SummarizeProcessor(NotionPageProcessor):
 
     def process(self, *_):
         text = self.get_summarization()
-        change_text_notion(self.notion, self.NOTION_PAGE_ID, text)
+        self.database.add_data(text)
         return "Суммаризация выполнена ✅"
 
     def get_summarization(self):
-        emotioin_df = EmotionsDiaryProcessor().to_pandas()
+        emotioin_df = NoitonTable("emotions").to_pandas()
 
         emotioin_df["Date"] = pd.to_datetime(emotioin_df["Date"])
         start_date = (datetime.now() - timedelta(days=60)).replace(tzinfo=pytz.UTC)

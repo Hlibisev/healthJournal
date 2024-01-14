@@ -29,22 +29,22 @@ class PillsProcessor(NotionTableProcessor):
         return "принимать" in request and len(request) < 100
 
     def process(self, request):
-        name, dose, status = self.get_pill_info(request)
-        self.send_to_notion(name, dose, status)
+        name, dose, status = self._extract_info(request)
+        self._write(name, dose, status)
         return f"💊 {name} {dose} " + ("🟢" if status == "начал" else "🔴")
 
-    def send_to_notion(self, name, dose, status):
+    def _write(self, name, dose, status):
         current_date = datetime.now().isoformat()
-        properties = {
-            "Лекарство": {"title": [{"text": {"content": name}}]},
-            "доза": {"rich_text": [{"text": {"content": dose}}]},
-            "статус": {"select": {"name": status}},
-            "Date": {"date": {"start": current_date}},
-        }
-        self.notion.pages.create(parent={"database_id": self.NOTION_DATABASE_ID}, properties=properties)
+
+        self.database.add_data([
+            ("Лекарство", "title", name),
+            ("доза", "rich_text", dose),
+            ("статус", "select", status),
+            ("Date", "date", current_date),
+        ])
 
     @retry(stop=stop_after_attempt(3), retry=retry_if_exception_type(ValueError))
-    def get_pill_info(self, request):
+    def _extract_info(self, request):
         request_body = medication_info_prompt(request)
         response = request_gpt(request_body)
 

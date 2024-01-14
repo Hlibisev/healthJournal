@@ -24,20 +24,20 @@ class EmotionsDiaryProcessor(NotionTableProcessor):
         return "дневник" in request or len(request) > 50
 
     def process(self, request):
-        summary, text = self.format_text(request)
-        self.send_to_notion(summary, text)
+        summary, text = self._format_text(request)
+        self._write(summary, text)
         return "Добавлено в дневник самочувствия 🙂"
 
-    def send_to_notion(self, summary, text):
+    def _write(self, summary, text):
         current_date = datetime.now().isoformat()
-        properties = {
-            "Summary": {"title": [{"text": {"content": summary}}]},
-            "Описание": {"rich_text": [{"text": {"content": text}}]},
-            "Date": {"date": {"start": current_date}},
-        }
-        self.notion.pages.create(parent={"database_id": self.NOTION_DATABASE_ID}, properties=properties)
 
-    def format_text(self, request):
+        self.database.add_data([
+            ("Summary", "title", summary),
+            ("Описание", "rich_text", text),
+            ("Date", "date", current_date),
+        ])
+
+    def _format_text(self, request):
         summary_request = emo_summary_prompt(request)
         format_text_request = format_prompt(request)
         summary, text = parallel_request_gpt([summary_request, format_text_request])
