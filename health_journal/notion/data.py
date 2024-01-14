@@ -1,23 +1,27 @@
-from abc import abstractmethod
 import datetime
+from abc import abstractmethod
 from pathlib import Path
 
 import notion_client
 import pandas as pd
 
 from health_journal.constants import NOTION_DATABASE_IDS, NOTION_PAGES_IDS
+from health_journal.notion.cells import cells
 from health_journal.settings_secret import AUTH_KEY
 from health_journal.utils import save_page, text_block
-from health_journal.notion.cells import cells
 
 
-class ContentData:
+class DataBase:
     @abstractmethod
     def create_backup(self):
         pass
 
+    @abstractmethod
+    def add_data(self, data):
+        pass
 
-class NotionData(ContentData):
+
+class NotionData(DataBase):
     def __init__(self, auth_key=AUTH_KEY) -> None:
         self.notion = notion_client.Client(auth=auth_key)
 
@@ -32,7 +36,7 @@ class NoitonTable(NotionData):
     @property
     def NOTION_DATABASE_ID(self):
         return NOTION_DATABASE_IDS[self.name]
-    
+
     def add_data(self, data):
         """
         Add data to table
@@ -45,12 +49,8 @@ class NoitonTable(NotionData):
         for column_name, column_type, value in data:
             properties[column_name] = cells[column_type](value)
 
-        new_entry = {
-            "parent": {"database_id": self.NOTION_DATABASE_ID},
-            "properties": properties
-        }
+        new_entry = {"parent": {"database_id": self.NOTION_DATABASE_ID}, "properties": properties}
         self.notion.pages.create(**new_entry)
-
 
     def _extract_data(self, page_properties):
         entry_data = {}
@@ -86,7 +86,6 @@ class NoitonPage(NotionData):
     @property
     def NOTION_PAGE_ID(self):
         return NOTION_PAGES_IDS[self.name]
-    
 
     def add_data(self, text):
         """
@@ -101,32 +100,8 @@ class NoitonPage(NotionData):
         first_id = current_blocks[0]["id"]
         self.notion.blocks.update(block_id=first_id, **text_block(text))
 
-
     def create_backup(self):
         folder = Path("backup") / f"{self.name}"
         save_page(self.notion, self.NOTION_PAGE_ID, folder)
 
         return folder
-    
-
-
-if __name__ == "__main__":
-    pressure = NoitonTable("pressure")
-
-    date = [
-        ("Date", "time", datetime.datetime.now().isoformat()),
-        ("Full text", "title", "test"),
-        ("Upper", "number", 128),
-        ("Lower", "number", 80),
-    ]
-
-    pressure.add_data(date)
-    # pages = pills.notion.databases.query(database_id=pills.NOTION_DATABASE_ID)
-
-    # pages = pills.notion.databases.retrieve(database_id=pills.NOTION_DATABASE_ID)
-    
-    # for name, params in pages["properties"].items():
-    #     print(name, params["type"])
-
-    # from IPython import embed; embed()
-    # pills.create_backup()
