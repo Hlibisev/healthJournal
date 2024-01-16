@@ -1,9 +1,10 @@
-import logging
 from datetime import datetime
 
 import boto3
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
+
+from health_journal import logger
 from health_journal.settings_secret import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, BUCKET_NAME
 
 
@@ -38,16 +39,16 @@ class AWSSaver:
 
         try:
             self.s3_client.upload_file(file, self.bucket_name, versioned_s3_file_path)
-            logging.info(f"File {file} uploaded to {versioned_s3_file_path} on S3.")
+            logger.info(f"File {file} uploaded to {versioned_s3_file_path} on S3.")
         except Exception as e:
-            logging.critical(f"Error uploading {file} to S3: {str(e)}")
+            logger.critical(f"Error uploading {file} to S3: {str(e)}")
 
 
 class BackUper:
     """
     Class for backuping databases to AWS S3.
 
-    This class uses apscheduler for scheduling backups. 
+    This class uses apscheduler for scheduling backups.
     """
 
     def __init__(self):
