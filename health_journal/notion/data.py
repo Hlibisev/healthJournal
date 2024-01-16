@@ -1,23 +1,36 @@
 import datetime
+import shutil
 from abc import abstractmethod
 from pathlib import Path
 
 import notion_client
 import pandas as pd
 
-from health_journal.constants import NOTION_DATABASE_IDS, NOTION_PAGES_IDS
+from health_journal.constants import DATABASES, NOTION_DATABASE_IDS, NOTION_PAGES_IDS
 from health_journal.notion.cells import cells
 from health_journal.settings_secret import AUTH_KEY
 from health_journal.utils import save_page, text_block
 
-
 class DataBase:
+    """
+    Abstract class for databases
+    """
+    
     @abstractmethod
     def create_backup(self):
+        """
+        Create backup of database
+        
+        Returns:
+            str: Path to backup. It can be file of zipped folder
+        """
         pass
 
     @abstractmethod
     def add_data(self, data):
+        """
+        Add data to database
+        """
         pass
 
 
@@ -27,6 +40,9 @@ class NotionData(DataBase):
 
 
 class NoitonTable(NotionData):
+    """
+    Class for working with notion tables. Adding new date, creating backups.
+    """
     def __init__(self, name="", auth_key=AUTH_KEY) -> None:
         super().__init__(auth_key)
 
@@ -42,7 +58,15 @@ class NoitonTable(NotionData):
         Add data to table
 
         Args:
-            data (list): list "column_name", "type", "value"
+            data (List[Tuple[str, str, Any]]): List of tuples with column name, column type and value
+        
+        Example:
+            data = [
+                ("Name", "title", "John"),
+                ("Age", "number", 20),
+                ("Date", "date", datetime.datetime.now()),
+                ("Emotion", "select", "Happy"),
+            ]
         """
         properties = {}
 
@@ -71,12 +95,15 @@ class NoitonTable(NotionData):
 
     def create_backup(self):
         data = self.to_pandas()
-        path = f"{self.name}.csv"
+        path = f"backup/{self.name}.csv"
         data.to_csv(path, index=False)
         return path
 
 
 class NoitonPage(NotionData):
+    """
+    Class for working with notion pages. Adding new date, creating backups.
+    """
     def __init__(self, name="", auth_key=AUTH_KEY) -> None:
         super().__init__(auth_key)
 
@@ -90,9 +117,6 @@ class NoitonPage(NotionData):
     def add_data(self, text):
         """
         Change text in first block of notion page
-
-        Args:
-            text (str): New text
         """
 
         current_blocks = self.notion.blocks.children.list(block_id=self.NOTION_PAGE_ID)["results"]
@@ -104,4 +128,7 @@ class NoitonPage(NotionData):
         folder = Path("backup") / f"{self.name}"
         save_page(self.notion, self.NOTION_PAGE_ID, folder)
 
-        return folder
+        path = folder.as_posix() + ".zip"
+        shutil.make_archive(folder, "zip", path)
+
+        return path

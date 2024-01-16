@@ -38,6 +38,9 @@ class Processor(ABC):
 
 
 class NotionTableProcessor(Processor):
+    """
+    Processor which connects to notion table using name of table
+    """
     @property
     @abstractmethod
     def name(self):
@@ -48,6 +51,9 @@ class NotionTableProcessor(Processor):
 
 
 class NotionPageProcessor(Processor):
+    """
+    Processor which connects to notion page using name of page
+    """
     @property
     @abstractmethod
     def name(self):

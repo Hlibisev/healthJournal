@@ -5,7 +5,6 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 from health_journal.constants import PROCESSORS
-from health_journal.processors.base import Drawble
 
 app = FastAPI()
 
@@ -33,17 +32,17 @@ async def process_request(request: Request):
     return {"response": res}
 
 
-@app.get("/{plot_name}_plot/", response_class=HTMLResponse)
-async def process_plot(plot_name: str):
-    """
-    Return corresponding html plot
-    """
-    for processor in PROCESSORS:
-        if str(processor) == plot_name and isinstance(processor, Drawble):
-            html = processor.get_html()
-            return html
+# @app.get("/{plot_name}_plot/", response_class=HTMLResponse)
+# async def process_plot(plot_name: str):
+#     """
+#     Return corresponding html plot
+#     """
+#     for processor in PROCESSORS:
+#         if str(processor) == plot_name and isinstance(processor, Drawble):
+#             html = processor.get_html()
+#             return html
 
-    logging.error(f"Plot {plot_name} not found")
+#     logging.error(f"Plot {plot_name} not found")
 
 
 # @app.on_event("startup")
@@ -51,5 +50,5 @@ async def process_plot(plot_name: str):
 #     """
 #     Set up everyday backup
 #     """
-#     backuper = BackUper()
+    # backuper = BackUper()
 #     backuper.backup_everyday(PROCESSORS)
