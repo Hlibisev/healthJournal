@@ -129,6 +129,6 @@ class NoitonPage(NotionData):
         save_page(self.notion, self.NOTION_PAGE_ID, folder)
 
         path = folder.as_posix() + ".zip"
-        shutil.make_archive(folder, "zip", path)
+        shutil.make_archive(folder.as_posix(), "zip", folder)
 
         return path

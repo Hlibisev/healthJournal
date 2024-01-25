@@ -10,6 +10,7 @@ NOTION_DATABASE_IDS = {
     "pressure": os.getenv("PRESSURE_NOTION_TABLE_ID"),
     "pills": os.getenv("PILLS_NOTION_TABLE_ID"),
     "emotions": os.getenv("EMOTION_NOTION_TABLE_ID"),
+    "abcde": os.getenv("ABCDE_NOTION_TABLE_ID"),
 }
 
 NOTION_PAGES_IDS = {

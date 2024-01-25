@@ -21,7 +21,7 @@ class EmotionsDiaryProcessor(NotionTableProcessor):
     name = "emotions"
 
     def should_processed(self, request):
-        return "дневник" in request or len(request) > 50
+        return "дневник" in request
 
     def process(self, request):
         summary, text = self._format_text(request)

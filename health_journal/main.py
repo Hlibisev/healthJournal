@@ -17,7 +17,6 @@ async def process_request(request: Request):
     """
     Process request and return beaty response
     """
-
     logger.info(f"Starting command... \n {request.command}")
 
     request = request.command.lower()
@@ -36,5 +35,5 @@ async def startup_event():
     """
     Set up everyday backup
     """
-    backuper = BackUper()
-    backuper.backup(DATABASES, hour=23)
+    backuper = BackUper(DATABASES)
+    backuper.backup(hour=23)

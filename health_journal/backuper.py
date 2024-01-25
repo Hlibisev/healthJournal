@@ -1,4 +1,5 @@
 from datetime import datetime
+from pathlib import Path
 
 import boto3
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -51,24 +52,23 @@ class BackUper:
     This class uses apscheduler for scheduling backups.
     """
 
-    def __init__(self):
+    def __init__(self, databases):
         self.saver = AWSSaver(
             aws_access_key_id=AWS_ACCESS_KEY_ID,
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
             bucket_name=BUCKET_NAME,
         )
 
+        self.databases = databases
         self.scheduler = AsyncIOScheduler()
 
-    def backup(self, databases, hour=24):
+    def backup(self, hour=24):
         """
         Backup databases to AWS S3 every {hour} hours.
 
         Args:
             databases (List[DataBase]): list of processors
         """
-        self.databases = databases
-
         self.scheduler.add_job(self._backup, CronTrigger(hour=hour, minute=0))
         self.scheduler.start()
 
@@ -77,4 +77,4 @@ class BackUper:
 
         for database in self.databases:
             path = database.create_backup()
-            self.saver.save_to_s3(path, timestamp=timestamp)
+            self.saver.save_to_s3(Path(path), timestamp=timestamp)
